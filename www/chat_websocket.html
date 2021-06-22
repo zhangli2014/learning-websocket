@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="socket.io.js"></script>
+    <script>
+        let sock = io.connect("ws://localhost:8086/")
+
+        window.onload = function(){          
+            let oBtn1 = document.getElementById("btn1");
+            let oBtn2 = document.getElementById("btn2");
+            let oUser = document.getElementById("user");
+            let oPass = document.getElementById("pass");
+
+            // on方法放在click事件外面，可以防止多次触发的问题。
+            sock.on("reg_ret", (code, msg) => {
+                if(code) {
+                    alert(msg)
+                } else {
+                    alert("注册成功")
+                }
+            })
+
+            sock.on("login_ret", (code, msg) => {
+                if(code) {
+                    alert(msg)
+                } else {
+                    alert("登录成功")
+                }
+            })
+
+            oBtn1.onclick = function() {
+                sock.emit("reg", oUser.value, oPass.value)               
+            }
+            oBtn2.onclick = function() {
+                sock.emit("login", oUser.value, oPass.value)               
+            }
+        }
+    </script>
+</head>
+<body>
+    user: <input type="text" id="user"/>
+    password: <input type="password" id="pass"/>
+    <input type="button" value="提交" id="btn1"/>
+    <input type="button" value="登录" id="btn2"/>
+</body>
+</html>
