@@ -14,6 +14,8 @@
             let oBtn2 = document.getElementById("btn2");
             let oUser = document.getElementById("user");
             let oPass = document.getElementById("pass");
+            let oSend = document.getElementById("send");
+            let oTxt = document.getElementById("txt1");
 
             // on方法放在click事件外面，可以防止多次触发的问题。
             sock.on("reg_ret", (code, msg) => {
@@ -32,6 +34,18 @@
                 }
             })
 
+            sock.on("msg_reg", (code, msg) => {
+                if(code) {
+                    alert(msg)
+                } else {
+                    alert(msg)
+                }
+            })
+
+            sock.on("msg", txt => {
+
+            })
+
             oBtn1.onclick = function() {
                 sock.emit("reg", oUser.value, oPass.value)               
             }
@@ -46,5 +60,21 @@
     password: <input type="password" id="pass"/>
     <input type="button" value="提交" id="btn1"/>
     <input type="button" value="登录" id="btn2"/>
+    <br />
+    <br />
+    <br />
+    <textarea id="txt1" rows="4" cols="80"></textarea><br />
+    <input type="button" value="send" id="send">
+
+    <!-- <ul>
+        <li>
+            <h4>name</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum dicta, enim modi rerum accusamus u?</p>
+        </li>
+        <li>
+            <h4>name</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum dicta, enim modi rerum accusamus u?</p>
+        </li>
+    </ul> -->
 </body>
 </html>

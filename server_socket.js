@@ -30,8 +30,9 @@ const httpServer = http.createServer((req, res)=>{
 httpServer.listen(8086);
 
 const wsServer = io(httpServer);
-
+let aSock = []
 wsServer.on("connection", sock => {
+    aSock.push(sock)
     let cur_username = "";
     let cur_userID = "";
     //注册接口
@@ -87,6 +88,22 @@ wsServer.on("connection", sock => {
             })
         }
     })
+
+    //发言
+    sock.on("msg", txt => {
+        if(!txt){
+            sock.emit("msg_ret", 1, "消息不能为空！")
+        } else {
+            //广播给所有人
+            aSock.forEach(item => {
+                // if(item == sock) return
+                item.emit("msg", txt)
+            })
+            sock.emit("msg_reg", 0, "发送成功")
+        }
+
+    })
+
     //离线
     sock.on("disconnect", () => {
         db.query(`update user_table set online=0 where ID='${cur_userID}'`, err => {
@@ -94,6 +111,8 @@ wsServer.on("connection", sock => {
             
             cur_username = "";
             cur_userID = "";
+
+            aSock = aSock.filter(item => item != sock)
         })
     })
 })
