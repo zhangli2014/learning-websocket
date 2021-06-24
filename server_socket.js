@@ -88,7 +88,6 @@ wsServer.on("connection", sock => {
             })
         }
     })
-
     //发言
     sock.on("msg", txt => {
         if(!txt){
@@ -96,8 +95,8 @@ wsServer.on("connection", sock => {
         } else {
             //广播给所有人
             aSock.forEach(item => {
-                // if(item == sock) return
-                item.emit("msg", txt)
+                if(item == sock) return
+                item.emit("msg", cur_username, txt)
             })
             sock.emit("msg_reg", 0, "发送成功")
         }
